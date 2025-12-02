@@ -87,7 +87,8 @@
         </div>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    {{-- === BAGIAN INI DIBUAT 4 KOLOM + TAMBAH CARD MASTER BARANG === --}}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
         <div class="bg-gray-900 p-5 rounded-lg shadow-sm relative overflow-hidden border-l-4 border-blue-500">
             <i class="fa-solid fa-file-invoice w-12 h-12 text-blue-400 opacity-10 absolute top-4 right-4"></i> 
             <p class="text-sm font-medium text-gray-400">Total SPK</p>
@@ -105,7 +106,35 @@
             <p class="text-sm font-medium text-gray-400">Total Barang Keluar</p>
             <p class="text-3xl font-bold text-white mt-1">{{ $totalBarangKeluar ?? '0' }}</p>
         </div>
+
+        {{-- CARD BARU: MASTER DATA / MASTER BARANG (EXTERNAL) --}}
+<a href="http://127.0.0.1:8001" target="_blank" rel="noopener"
+   class="bg-gray-900 p-5 rounded-lg shadow-sm relative overflow-hidden 
+          border-l-4 border-blue-500 border border-dashed border-gray-700
+          hover:bg-gray-800 transition-colors duration-150 block group">
+
+    {{-- icon background besar (tetap) --}}
+    <i class="fa-solid fa-boxes-stacked w-12 h-12 text-blue-400 opacity-10 absolute top-4 right-4"></i>
+
+    {{-- tanda “external” pojok kanan atas --}}
+    <div class="absolute top-3 right-3 text-gray-400 group-hover:text-blue-300 transition">
+        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
     </div>
+
+    <p class="text-sm font-medium text-gray-400 flex items-center gap-2">
+        Master Data
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-800 text-gray-300">
+            External
+        </span>
+    </p>
+
+    <p class="text-xl font-bold text-white mt-1">Master Barang</p>
+    <p class="text-xs text-gray-500 mt-1">
+        Kelola data barang • buka tab baru
+    </p>
+</a>
+    </div>
+    {{-- === AKHIR PERUBAHAN === --}}
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div class="bg-gray-900 p-5 rounded-lg shadow-sm border border-gray-700 flex flex-col h-full">
