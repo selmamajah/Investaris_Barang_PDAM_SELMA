@@ -31,6 +31,7 @@ Route::get('/pegawai/{id}/divisi', [PegawaiController::class, 'getDivisi']);
 
 // ------------------- PROTECTED ROUTES (AUTH REQUIRED) -------------------
 Route::middleware('auth')->group(function () {
+
     // ------------------- REDIRECT HOME -------------------
     Route::get('/', fn() => redirect()->route('dashboard'));
 
@@ -47,17 +48,20 @@ Route::middleware('auth')->group(function () {
     // ------------------- STRUK (PEMASUKAN) -------------------
     Route::prefix('struks')->group(function () {
         Route::delete('/bulk-delete', [StrukController::class, 'bulkDelete'])->name('struks.bulk-delete');
+
         Route::get('/', [StrukController::class, 'index'])->name('struks.index');
         Route::get('/create', [StrukController::class, 'create'])->name('struks.create');
         Route::post('/', [StrukController::class, 'store'])->name('struks.store');
         Route::get('/{struk}', [StrukController::class, 'show'])->name('struks.show');
         Route::get('/{struk}/edit', [StrukController::class, 'edit'])->name('struks.edit');
+
+        // ✅ cukup satu update route, gak dobel lagi
         Route::put('/{struk}', [StrukController::class, 'update'])->name('struks.update');
-        Route::put('/struks/{id}', [StrukController::class, 'update'])->name('struks.update');
+
         Route::delete('/{struk}', [StrukController::class, 'destroy'])->name('struks.destroy');
 
         // Item routes
-        Route::get('/{struk}/items', [StrukController::class, 'items']);
+        Route::get('/{struk}/items', [StrukController::class, 'getItems'])->name('struks.items');
         Route::post('/{id}/item', [StrukController::class, 'addItem'])->name('struks.addItem');
         Route::put('/{struk}/item/{index}', [StrukController::class, 'updateItem'])->name('struks.updateItem');
         Route::put('/{struk}/update-items', [StrukController::class, 'updateItems'])->name('struks.updateItems');
@@ -72,12 +76,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/export/csv', [StrukController::class, 'exportCSV'])->name('struks.export.csv');
     });
 
-    Route::get('/pengeluarans/generate-nomor-struk', [\App\Http\Controllers\PengeluaranController::class, 'ajaxGenerateNomorStruk']);
+    // Helpers / ajax / generate
+    Route::get('/pengeluarans/generate-nomor-struk', [PengeluaranController::class, 'ajaxGenerateNomorStruk']);
     Route::post('/generate-spk', [PengeluaranController::class, 'generateNamaSpkString']);
 
     // ------------------- PENGELUARAN -------------------
     Route::prefix('pengeluarans')->group(function () {
-        // PASTIKAN INI PALING ATAS!
+
+        // ✅ cukup satu mass-delete, gak dobel lagi
         Route::delete('/mass-delete', [PengeluaranController::class, 'massDelete'])->name('pengeluarans.massDelete');
 
         Route::get('/', [PengeluaranController::class, 'index'])->name('pengeluarans.index');
@@ -85,6 +91,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{pengeluaran}', [PengeluaranController::class, 'show'])->name('pengeluarans.show');
         Route::get('/{pengeluaran}/edit', [PengeluaranController::class, 'edit'])->name('pengeluarans.edit');
         Route::put('/{pengeluaran}', [PengeluaranController::class, 'update'])->name('pengeluarans.update');
+
+        // ✅ cukup satu destroy, gak dobel lagi
         Route::delete('/{pengeluaran}', [PengeluaranController::class, 'destroy'])->name('pengeluarans.destroy');
 
         // Route khusus untuk pengeluaran dari struk
@@ -92,11 +100,10 @@ Route::middleware('auth')->group(function () {
             ->name('pengeluarans.create-by-struk');
         Route::post('/from-struk/{struk}', [PengeluaranController::class, 'storeByStruk'])
             ->name('pengeluarans.store-by-struk');
-    });
-    Route::get('pengeluarans/export/excel', [PengeluaranController::class, 'exportExcel'])->name('pengeluarans.export.excel');
-    Route::get('pengeluarans/export/csv', [PengeluaranController::class, 'exportCsv'])->name('pengeluarans.export.csv');
 
-    Route::delete('/pengeluarans/mass-delete', [PengeluaranController::class, 'massDelete'])->name('pengeluarans.massDelete');
-    Route::delete('/pengeluarans/{pengeluaran}', [PengeluaranController::class, 'destroy'])->name('pengeluarans.destroy');
-    Route::get('/struks/{struk}/items', [StrukController::class, 'getItems'])->name('struks.items');
+        // Export routes (lebih rapi kalau di dalam prefix)
+        Route::get('/export/excel', [PengeluaranController::class, 'exportExcel'])->name('pengeluarans.export.excel');
+        Route::get('/export/csv', [PengeluaranController::class, 'exportCsv'])->name('pengeluarans.export.csv');
+    });
+
 });
