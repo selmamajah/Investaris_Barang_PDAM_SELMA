@@ -636,6 +636,39 @@
             });
         }
         initBarangDropdown();
+        
+        // ==================== SEARCH FUNCTIONALITY ====================
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchButton = document.getElementById('clearSearch');
+        let searchTimeout;
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                
+                searchTimeout = setTimeout(() => {
+                    const searchTerm = this.value.trim();
+                    const url = new URL(window.location.href);
+                    
+                    if (searchTerm) {
+                        url.searchParams.set('search', searchTerm);
+                    } else {
+                        url.searchParams.delete('search');
+                    }
+                    
+                    window.location.href = url.toString();
+                }, 500);
+            });
+
+            if (clearSearchButton) {
+                clearSearchButton.addEventListener('click', function() {
+                    searchInput.value = '';
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('search');
+                    window.location.href = url.toString();
+                });
+            }
+        }
     });
 
     function openModal(src) {
